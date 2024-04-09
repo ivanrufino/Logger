@@ -19,13 +19,38 @@ class Logger
     /*  private function __construct($pathFile,$nameFile,$messageFormat) */
     private function __construct($configuracao)
     {
-        $this->pathFileDefault = sprintf("%s/%s", dirname(__DIR__), "log");
+        
+        $this->pathFileDefault = sprintf("%s/%s", $this->getPathDefault(), "log");
         $this->configuracao = $configuracao;
         $this->uniqueId = uniqid(gmdate("YmdHis"));
         $this->setConfiguracao();
         //$this->setPathFile($pathFile);
         //$this->senameFile($nameFile);
         //$this->messageFormat =$messageFormat;
+
+    }
+    private function getPathDefault()
+    {
+        // Caminho completo do arquivo atual
+        $caminhoCompleto = __FILE__;
+
+        // Separando o caminho do arquivo em partes usando a barra como delimitador
+        $partesCaminho = explode(DIRECTORY_SEPARATOR, $caminhoCompleto);
+
+        // Encontrando a posição do diretório "vendor"
+        $indiceVendor = array_search('vendor', $partesCaminho);
+
+        // Se o diretório "vendor" for encontrado
+        if ($indiceVendor !== false) {
+            // Removendo todas as partes do caminho do arquivo a partir do diretório "vendor"
+            $caminhoRaiz = implode(DIRECTORY_SEPARATOR, array_slice($partesCaminho, 0, $indiceVendor));
+           
+        } else {
+            $caminhoRaiz=  dirname((__DIR__));
+            //echo "Diretório 'vendor' não encontrado no caminho do arquivo.";
+        }
+
+        return $caminhoRaiz;
 
     }
     private function setConfiguracao()
@@ -38,9 +63,9 @@ class Logger
     {
         $this->pathFile = $this->pathFileDefault;
         if (!is_null($this->configuracao) && isset($this->configuracao['path'])) {
-            $this->pathFile = dirname(__DIR__) . "/" . $this->configuracao['path'];
+            $this->pathFile = $this->getPathDefault() . "/" . $this->configuracao['path'];
         }
-        //echo $this->pathFile;die();
+        
     }
     private function setNameFile()
     {
@@ -59,7 +84,7 @@ class Logger
             $this->messageFormat = $this->configuracao['messageFormat'];
         }
     }
-    public static function getInstance($configuracao = null/* $pathFile = null, $nameFile = null, $messageFormat = null,  */)
+    public static function start($configuracao = null/* $pathFile = null, $nameFile = null, $messageFormat = null,  */)
     {
         if (!isset(self::$instance)) {
             /*  self::$instance = new Logger($pathFile,$nameFile, $messageFormat); */
@@ -67,16 +92,13 @@ class Logger
         }
         return self::$instance;
     }
-    public function __invoke($configuracao=NULL)
-    {
-        return self::getInstance($configuracao);
-    }
+   
     public function log($message, $type = "INFO")
     {
 
         DirectoryHandler::createDirectory($this->pathFile);
         $pathFull = sprintf("%s/%s", $this->pathFile, $this->nameFile);
-        echo $pathFull . PHP_EOL;
+       
         $this->type = LoggerType::getType($type);
         $messageLog = $this->formataMensagem($message);
         file_put_contents($pathFull, $messageLog . PHP_EOL, FILE_APPEND);
@@ -89,7 +111,7 @@ class Logger
         //$message ="[". date('d/m/Y H:i:s') ."] [".$type."] - ".$data;
         return $message;
     }
-    public function printToTerminal($message, $type)
+    public function printToTerminal($message,$type = "INFO")
     {
         $this->type = LoggerType::getType($type);
         echo $this->formataMensagem($message . PHP_EOL);

@@ -1,2 +1,5 @@
 vendor/
 teste.php
+teste_.php
+composer.json
+composer.lock

@@ -30,7 +30,7 @@
 <h2>Chamada da Função</h2>
 
 <pre>
-$logger = Logger($configuracao); //$configuração é um campo opcional
+$logger = Logger::start($configuracao); //$configuração é um campo opcional
 $logger->log("Mensagem Teste", 2); // Será gerado um arquivo de acordo com as configurações
 $logger->printToTerminal("Mensagem Teste", 1); // Irá exibir no terminal
 </pre>
@@ -45,11 +45,11 @@ $configuracao = [
     'messageFormat' => '[%d[d/m/Y H:i:s]] [%t] %m %u'
 ];
 
-$logger = Logger($configuracao);
+$logger = Logger::start($configuracao);
 $logger->log("Mensagem de teste", 2);  // pode ser utilizado tambem a string "error" $logger->log("Mensagem de teste", "error"); 
 </pre>
 
-<h2>Configurações Padrão</h2>
+<h2>Configurações Padrão</h2> 
 
 <p>Se as configurações não forem fornecidas ao instanciar a classe, valores padrão serão utilizados para o caminho do arquivo de log, nome do arquivo e formato da mensagem.</p>
 
