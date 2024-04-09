@@ -46,7 +46,7 @@ class LoggerType
                 $type_returned = 'ALERT';
                 break;
             case self::EMERGENCY:
-            case 'emeregency':
+            case 'emergency':
                 $type_returned = 'EMERGENCY';
                 break;
 
