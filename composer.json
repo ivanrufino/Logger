@@ -1,0 +1,16 @@
+{
+    "name": "ivanrufino/logger",
+    "description": "O Logger é uma classe PHP para registrar logs em arquivos e exibir mensagens no terminal.",
+    "autoload": {
+        "psr-4": {
+            "Ivanrufino\\Logger\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ivan Rufino",
+            "email": "ivan.rufino.m@gmail.com"
+        }
+    ],
+    "require": {}
+}
